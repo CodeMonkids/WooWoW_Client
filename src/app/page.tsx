@@ -5,6 +5,7 @@ import ProfileArea from "@/components/ProfileArea";
 import GameInfos from "../components/GameInfos";
 
 export default function Home(): JSX.Element {
+  console.log("env:",process.env.NEXT_PUBLIC_SERVER_URL)
   return (
     <main className="min-w-full flex flex-col items-center justify-center">
       <div className="flex w-[100vw]">

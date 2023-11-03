@@ -2,7 +2,6 @@
 
 import axios from "axios";
 import { RefObject, useEffect, useRef, useState } from "react";
-import { SERVER_URL } from "../../serverurl";
 import { Spacing } from "../styledComponents";
 import Link from "next/link";
 import GameInfos from "@/components/GameInfos";
@@ -31,7 +30,7 @@ export default function WorldbuffForm(): JSX.Element {
       return;
     }
     try {
-      const response = await axios.post(`${SERVER_URL}/api/worldbuff`, {
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/worldbuff`, {
         adminKey: adminkeyRef.current?.value,
         buffData: JSON.stringify(buffDatas),
       });
