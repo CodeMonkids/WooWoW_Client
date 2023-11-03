@@ -1,12 +1,11 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { SERVER_URL } from "../../serverurl";
 
 export default function WorldBuff(): JSX.Element {
   const [buffData, setBuffData] = useState<string>();
   async function getWorldbuff() {
     try {
-      const response = await axios.get(`${SERVER_URL}/api/worldbuff`);
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/worldbuff`);
       setBuffData(response.data);
     } catch (error) {}
   }

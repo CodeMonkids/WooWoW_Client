@@ -8,7 +8,6 @@ import Character from "@/model/Characer";
 import { json } from "stream/consumers";
 import { Spacing } from "../styledComponents";
 import Loading from "./Loading";
-import { SERVER_URL } from "../../serverurl";
 
 export default function ProfileArea(): JSX.Element {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -74,7 +73,7 @@ export default function ProfileArea(): JSX.Element {
       try {
         const response = await axios.get(
           // prettier-ignore
-          `${SERVER_URL}/api/character?charactername=${encodeURIComponent(name)}`
+          `${process.env.NEXT_PUBLIC_SERVER_URL}/api/character?charactername=${encodeURIComponent(name)}`
         );
         if (response.status === 501) {
           alert(`네트워크에러발생`);

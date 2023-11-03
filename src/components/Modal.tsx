@@ -4,15 +4,11 @@ import { CharacterProps } from "./Profile";
 import axios from "axios";
 import Item from "@/model/Item";
 import IconComponent from "./ItemComponent";
-import CharacterStatistics from "@/model/Statistics";
-import wowHardcoreLogo from "../img/WOW_Classic_Hardcore_Logo_enUS.png";
-import Image from "next/image";
 import { Spacing } from "../styledComponents";
 import Link from "next/link";
 import Statistics from "@/model/Statistics";
 import WoWCharacterProfile from "@/model/WoWCharacterProfile ";
 import Loading from "./Loading";
-import { SERVER_URL } from "../../serverurl";
 
 export default function Modal({
   characterData,
@@ -27,7 +23,7 @@ export default function Modal({
 
   async function featchCharacterData(characterName: string) {
     try {
-      const response = await axios.get(`${SERVER_URL}/api/characterinfo`, {
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/characterinfo`, {
         params: { charactername: characterName },
       });
       setcharacterDatainfo(response.data);
