@@ -1,25 +1,24 @@
-import axios from "axios";
-import { useEffect, useState } from "react";
+import axios from 'axios';
+import { useEffect, useState } from 'react';
 
 export default function WorldBuff(): JSX.Element {
   const [buffData, setBuffData] = useState<string>();
   async function getWorldbuff() {
     try {
-      const response = await axios.get(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/worldbuff`);
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/api/worldbuff`,
+      );
       setBuffData(response.data);
-    } catch (error) {}
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   useEffect(() => {
     getWorldbuff();
   });
   return (
-    <div
-      className=""
-      onClick={() => {
-        // console.log(buffData);
-      }}
-    >
+    <div>
       {buffData &&
         JSON.parse(buffData).map((ele: string, idx: number) => (
           <p className="text-white text-2xl" key={idx}>

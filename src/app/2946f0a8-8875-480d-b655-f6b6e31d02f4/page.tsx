@@ -1,4 +1,4 @@
-import WorldbuffForm from "@/components/WorldbuffForm";
+import WorldbuffForm from '@/components/WorldbuffForm';
 
 export default function Page() {
   return (

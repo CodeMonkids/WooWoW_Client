@@ -1,13 +1,11 @@
-"use client";
+'use client';
 
-import axios from "axios";
-import { FormEvent, RefObject, useEffect, useRef, useState } from "react";
-import WoWCharacterProfile from "@/model/WoWCharacterProfile ";
-import LevelStep from "./LevelStep.client";
-import Character from "@/model/Characer";
-import { json } from "stream/consumers";
-import { Spacing } from "../styledComponents";
-import Loading from "./Loading";
+import axios from 'axios';
+import { FormEvent, useEffect, useRef, useState } from 'react';
+import WoWCharacterProfile from '@/model/WoWCharacterProfile ';
+import LevelStep from './LevelStep.client';
+import Spacing from '../styledComponents';
+import Loading from './Loading';
 
 export default function ProfileArea(): JSX.Element {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -22,6 +20,34 @@ export default function ProfileArea(): JSX.Element {
   const [characterDatas, setChatacterDatas] = useState<WoWCharacterProfile[]>();
 
   let mounted = false;
+  async function featchCharacterDatas(names: string[]) {
+    const responseArray = names.map(async (name: string) => {
+      try {
+        const response = await axios.get(
+          // prettier-ignore
+          `${process.env.NEXT_PUBLIC_SERVER_URL}/api/character?charactername=${encodeURIComponent(name)}`,
+        );
+        if (response.status === 501) {
+          alert(`네트워크에러발생`);
+          return;
+        }
+        return response.data;
+      } catch (error) {
+        alert(`${name} 캐릭터를 찾을 수 없습니다.`);
+        setCharacterNames((pre) => pre.filter((ele) => ele !== name));
+      }
+    });
+    const chacterDatas = (await Promise.allSettled(responseArray)).filter(
+      (result): result is PromiseFulfilledResult<WoWCharacterProfile> =>
+        result.status === 'fulfilled' && result.value !== undefined,
+    );
+
+    const suitableArray = chacterDatas.map(
+      (data: PromiseFulfilledResult<any>) => data.value,
+    );
+
+    setChatacterDatas(suitableArray);
+  }
 
   useEffect(() => {
     featchCharacterDatas(characterNames);
@@ -68,35 +94,6 @@ export default function ProfileArea(): JSX.Element {
     `);
   }, []);
 
-  async function featchCharacterDatas(names: string[]) {
-    const responseArray = names.map(async (name: string, idx) => {
-      try {
-        const response = await axios.get(
-          // prettier-ignore
-          `${process.env.NEXT_PUBLIC_SERVER_URL}/api/character?charactername=${encodeURIComponent(name)}`
-        );
-        if (response.status === 501) {
-          alert(`네트워크에러발생`);
-          return;
-        }
-        return response.data;
-      } catch (error) {
-        alert(`${name} 캐릭터를 찾을 수 없습니다.`);
-        setCharacterNames((pre) => pre.filter((ele) => ele !== name));
-      }
-    });
-    const chacterDatas = (await Promise.allSettled(responseArray)).filter(
-      (result): result is PromiseFulfilledResult<WoWCharacterProfile> =>
-        result.status === "fulfilled" && result.value !== undefined
-    );
-
-    const suitableArray = chacterDatas.map(
-      (data: PromiseFulfilledResult<any>) => data.value
-    );
-
-    setChatacterDatas(suitableArray);
-  }
-
   useEffect(() => {
     // console.log(characterDatas);
   }, [characterDatas]);
@@ -112,7 +109,7 @@ export default function ProfileArea(): JSX.Element {
   function groupByConsecutiveNumbers(characterDatas: WoWCharacterProfile[]): WoWCharacterProfile[][] {
     const result: WoWCharacterProfile[][] = [];
     let temp: WoWCharacterProfile[] = [];
-    for (let i = 0; i < characterDatas.length; i++) {
+    for (let i = 0; i < characterDatas.length; i+=1) {
       if (
 // prettier-ignore
         (i === 0) || (characterDatas[i].level) === (characterDatas[i - 1].level))
@@ -132,7 +129,7 @@ export default function ProfileArea(): JSX.Element {
   function submitForm(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     // console.log(inputRef.current?.value);
-    if (inputRef.current?.value === "") {
+    if (inputRef.current?.value === '') {
       // console.log(`캐릭터 이름을 입력하세요`);
       return;
     }
@@ -162,11 +159,8 @@ export default function ProfileArea(): JSX.Element {
       {characterDatas &&
         groupByConsecutiveNumbers(sortLevel(characterDatas)).map(
           (sameLevelcharcters: WoWCharacterProfile[], idx) => (
-            <LevelStep
-              characterDatas={sameLevelcharcters}
-              key={idx}
-            ></LevelStep>
-          )
+            <LevelStep characterDatas={sameLevelcharcters} key={idx} />
+          ),
         )}
     </>
   );
