@@ -1,11 +1,12 @@
 'use client';
 
-import Item from '@/model/Item';
-import { styled } from 'styled-components';
 import React, { useRef, useState } from 'react';
+import { styled } from 'styled-components';
 
-import Tooltip from './Tooltip';
+import Item from '@/model/Item';
+
 import ItemDiscription from './ItemDiscriptcion';
+import Tooltip from './Tooltip';
 
 interface ItemComponentProps {
   item: Item | undefined;

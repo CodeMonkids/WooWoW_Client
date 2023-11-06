@@ -1,5 +1,6 @@
-import Item from '@/model/Item';
 import { styled } from 'styled-components';
+
+import Item from '@/model/Item';
 
 interface ItemDiscriptionProps {
   item: Item;

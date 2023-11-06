@@ -1,7 +1,7 @@
 {
   "root": true, 
   "parser": "@typescript-eslint/parser",
-  "plugins": ["@typescript-eslint", "prettier"],
+  "plugins": ["@typescript-eslint", "prettier","simple-import-sort"],
   "parserOptions": {
     "project": "./tsconfig.json",
     "createDefaultProgram": true
@@ -30,6 +30,8 @@
     "no-alert": "off",
     "no-console": "off",
     "no-unused-vars": "off", //타입스크립트 사용시 interface의 변수명을 eslint가 잡지 않도록 함.
-    "@typescript-eslint/no-unused-vars": "warn" //대신 사용하지 않는 변수는 @typescript/eslint를 통해 잡아줌.
+    "@typescript-eslint/no-unused-vars": "warn", //대신 사용하지 않는 변수는 @typescript/eslint를 통해 잡아줌.
+    "simple-import-sort/imports": "error", // eslint-plugin-simple-import-sort 설정
+    "simple-import-sort/exports": "error" // eslint-plugin-simple-import-sort 설정
   }
 }

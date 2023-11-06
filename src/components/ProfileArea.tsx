@@ -2,9 +2,11 @@
 
 import axios from 'axios';
 import { FormEvent, useEffect, useRef, useState } from 'react';
+
 import WoWCharacterProfile from '@/model/WoWCharacterProfile ';
-import LevelStep from './LevelStep.client';
+
 import Spacing from '../styledComponents';
+import LevelStep from './LevelStep.client';
 import Loading from './Loading';
 
 export default function ProfileArea(): JSX.Element {

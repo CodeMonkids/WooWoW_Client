@@ -1,10 +1,12 @@
+import axios from 'axios';
+import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import { styled } from 'styled-components';
-import axios from 'axios';
+
 import Item from '@/model/Item';
-import Link from 'next/link';
 import Statistics from '@/model/Statistics';
 import WoWCharacterProfile from '@/model/WoWCharacterProfile ';
+
 import Spacing from '../styledComponents';
 import IconComponent from './ItemComponent';
 import Loading from './Loading';

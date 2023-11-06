@@ -1,4 +1,5 @@
 import WoWCharacterProfile from '@/model/WoWCharacterProfile ';
+
 import Profile from './Profile';
 
 interface LevelStepProps {

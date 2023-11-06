@@ -1,20 +1,21 @@
 'use client';
 
-import { styled } from 'styled-components';
 import Image from 'next/image';
 import { useState } from 'react';
+import { styled } from 'styled-components';
+
 import WoWCharacterProfile from '@/model/WoWCharacterProfile ';
-import wak from '../img/wak.jpg';
+
 import tomb from '../img/coffin.png';
+import druid from '../img/druidIcon.webp';
+import hunter from '../img/hunterIcon.webp';
+import junsa from '../img/knightIcon.webp';
 import bubsa from '../img/magicionIcon.webp';
-import dotgu from '../img/thifeIcon.webp';
 import paladin from '../img/paladinIcon.webp';
 import saje from '../img/priestIcon.webp';
+import dotgu from '../img/thifeIcon.webp';
+import wak from '../img/wak.jpg';
 import blackbubsa from '../img/warlockIcon.webp';
-import hunter from '../img/hunterIcon.webp';
-import druid from '../img/druidIcon.webp';
-import junsa from '../img/knightIcon.webp';
-
 import Modal from './Modal';
 
 interface ContainerProps {

@@ -1,5 +1,5 @@
-import { styled } from 'styled-components';
 import { ReactElement } from 'react';
+import { styled } from 'styled-components';
 
 interface TooltipProps {
   ChildComponent: ReactElement;

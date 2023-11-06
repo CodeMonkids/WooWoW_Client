@@ -1,9 +1,11 @@
 'use client';
 
 import axios from 'axios';
-import { RefObject, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
+import { RefObject, useEffect, useRef, useState } from 'react';
+
 import GameInfos from '@/components/GameInfos';
+
 import Spacing from '../styledComponents';
 import WorldbuffInputComponent from './WorldbuffInputComponent';
 
