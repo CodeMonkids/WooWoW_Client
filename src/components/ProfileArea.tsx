@@ -3,151 +3,73 @@
 import axios from 'axios';
 import { FormEvent, useEffect, useRef, useState } from 'react';
 
+import stringJson from '@/asset/json/strings.json';
 import WoWCharacterProfile from '@/model/WoWCharacterProfile ';
 
 import Spacing from '../styledComponents';
 import LevelStep from './LevelStep.client';
 import Loading from './Loading';
 
-export default function ProfileArea(): JSX.Element {
+const defaultNames = [
+  `줄건줘`,
+  `지존아이네`,
+  `드워프주르르`,
+  `부가땅`,
+  `뽀짝쿵야`,
+];
+
+export default function ProfileArea() {
   const inputRef = useRef<HTMLInputElement>(null);
-  const [characterNames, setCharacterNames] = useState<string[]>([
-    `줄건줘`,
-    `지존아이네`,
-    `드워프주르르`,
-    `부가땅`,
-    `뽀짝쿵야`,
-  ]);
 
-  const [characterDatas, setChatacterDatas] = useState<WoWCharacterProfile[]>();
-
-  let mounted = false;
-  async function featchCharacterDatas(names: string[]) {
-    const responseArray = names.map(async (name: string) => {
-      try {
-        const response = await axios.get(
-          // prettier-ignore
-          `${process.env.NEXT_PUBLIC_SERVER_URL}/api/character?charactername=${encodeURIComponent(name)}`,
-        );
-        if (response.status === 501) {
-          alert(`네트워크에러발생`);
-          return;
-        }
-        return response.data;
-      } catch (error) {
-        alert(`${name} 캐릭터를 찾을 수 없습니다.`);
-        setCharacterNames((pre) => pre.filter((ele) => ele !== name));
+  const [characterData, setCharacterData] = useState<WoWCharacterProfile[]>([]);
+  async function getCharacterData(name: string) {
+    try {
+      const response = await axios.get(
+        `${
+          process.env.NEXT_PUBLIC_SERVER_URL
+        }/api/character?charactername=${encodeURIComponent(name)}`,
+      );
+      if (response.status === 501) {
+        alert(`네트워크에러발생`);
+        return;
       }
-    });
-    const chacterDatas = (await Promise.allSettled(responseArray)).filter(
-      (result): result is PromiseFulfilledResult<WoWCharacterProfile> =>
-        result.status === 'fulfilled' && result.value !== undefined,
-    );
-
-    const suitableArray = chacterDatas.map(
-      (data: PromiseFulfilledResult<any>) => data.value,
-    );
-
-    setChatacterDatas(suitableArray);
+      setCharacterData((data) => [...data, response.data]);
+    } catch (err) {
+      alert(`${name} 캐릭터를 찾을 수 없습니다.`);
+      console.error(err);
+    }
   }
 
   useEffect(() => {
-    featchCharacterDatas(characterNames);
-
-    if (mounted) return;
-    mounted = true;
-    console.log(`
-          ME SSIYAM MA!
-
-    ~.                                         
-    ;:;!-                ;!;                    
-   ,; ..;!.            ;!~.;~                   
-   !-,~;:,!-         .!:.~-,!                   
-   !.~,,-!-;,..,,,..~!-,!:~.!.                  
-   ;.~,,,,~.,,,,.,,,-..;,,~,;-                  
-   !.~,,,,.....  .,....,-,~,:~                  
-   :-,,,...~~.,  ........,,.;~                  
-    ;-....~@@. , .~@#,......!-                  
-    ;......=*;@@#!~##,.....,;                   
-    -.....,:  $#$,~:.......:.                   
-   ~......    .;    .......-~                   
-   *.,...  ,-:==!,.- .......;                   
-   :...      :--~~,    .....;.                  
-   ;          ..           ,;                   
-   !                       -,          ~!,;     
-   :~                     ,;!!;,:!!!*!!,  !     
-    !                   .~-....,-,.....,:!-     
-    -~                    ............... !.    
-     ;                   ................. ;.   
-     ;                   ,................. !   
-     ;                   ...................--  
-     -.                  ................... ;  
-     ,-                  ................... !  
-     .;. -              .................... ~  
-      ~-  ,,., ,        ................... ~   
-       :,.              ................... :   
-       ,~..            .......,   .........:    
-        ;....          .......,,,,-,.....,,-    
-        ,:.....,,,,,,,,......,,,,-;;,.... !     
-         ;,....-.,,,-~:,,,..;!!!;; ;-.,. !      
-         ~, .  :      *    :!!!;=  !.   :       
-         ;    .:     - , . !!;~;- - ,   !       
-         ,~,-,,.      ~~--,!!;-:  .~~-,,,       
-    `);
+    defaultNames.map((name) => getCharacterData(name));
+    console.log(stringJson.messiImageText);
   }, []);
 
-  useEffect(() => {
-    // console.log(characterDatas);
-  }, [characterDatas]);
-  // prettier-ignore
-
-  //
-
-  function sortLevel (characters : WoWCharacterProfile[]) {
-    return characters.sort((a,b)=> b.level - a.level )
+  function sortLevel(characters: WoWCharacterProfile[]) {
+    return characters.sort((a, b) => b.level - a.level);
   }
 
-  // prettier-ignore
-  function groupByConsecutiveNumbers(characterDatas: WoWCharacterProfile[]): WoWCharacterProfile[][] {
-    const result: WoWCharacterProfile[][] = [];
-    let temp: WoWCharacterProfile[] = [];
-    for (let i = 0; i < characterDatas.length; i+=1) {
-      if (
-// prettier-ignore
-        (i === 0) || (characterDatas[i].level) === (characterDatas[i - 1].level))
-      {
-        //* 첫 번째 요소거나 이전 요소와 같은 경우 임시 배열에 추가
-        temp.push(characterDatas[i]); 
-      } else {
-        //* 이전 요소와 다른 경우
-        result.push(temp); //* 임시 배열을 결과에 추가하고,
-        temp = [characterDatas[i]]; // *새로운 숫자의 그룹을 시작합니다.
-      }
-    }
-    if (temp.length) result.push(temp); // *마지막 그룹을 결과에 추가합니다.
-    return result;
+  function groupByConsecutiveNumbers(
+    formatData: WoWCharacterProfile[],
+  ): WoWCharacterProfile[][] {
+    // 캐릭터 Level 별로 배열 나누기
+    return formatData.reduce((acc, cur) => {
+      const index = acc.findIndex((el) => el[0].level === cur.level);
+      if (index < 0) acc.push([cur]);
+      else acc[index].push(cur);
+      return acc;
+    }, [] as WoWCharacterProfile[][]);
   }
 
   function submitForm(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    // console.log(inputRef.current?.value);
-    if (inputRef.current?.value === '') {
-      // console.log(`캐릭터 이름을 입력하세요`);
-      return;
-    }
-    if (inputRef.current !== null) {
-      setCharacterNames((pre) => [...pre, inputRef.current!.value]);
-    }
+    if (!inputRef.current || inputRef.current.value === '') return;
+    getCharacterData(inputRef.current.value);
   }
-
-  useEffect(() => {
-    // console.log(characterNames);
-    featchCharacterDatas(characterNames);
-  }, [characterNames]);
 
   return (
     <>
-      <form onSubmit={submitForm}>
+      <form onSubmit={submitForm} name="search-character">
         <input
           ref={inputRef}
           type="text"
@@ -157,11 +79,14 @@ export default function ProfileArea(): JSX.Element {
       </form>
       <Spacing height={20} />
 
-      {!characterDatas && <Loading />}
-      {characterDatas &&
-        groupByConsecutiveNumbers(sortLevel(characterDatas)).map(
-          (sameLevelcharcters: WoWCharacterProfile[], idx) => (
-            <LevelStep characterDatas={sameLevelcharcters} key={idx} />
+      {!characterData && <Loading />}
+      {characterData &&
+        groupByConsecutiveNumbers(sortLevel(characterData)).map(
+          (sameLevelcharcters: WoWCharacterProfile[]) => (
+            <LevelStep
+              characterDatas={sameLevelcharcters}
+              key={sameLevelcharcters[0].level}
+            />
           ),
         )}
     </>

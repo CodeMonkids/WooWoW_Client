@@ -33,8 +33,6 @@ export default function WorldbuffInputComponent({
   return (
     <div className="flex w-[100%] bg-slate-300 p-[10px] rounded-lg">
       <select
-        name=""
-        id=""
         className="rounded-md"
         ref={weekRef}
         onChange={() => {
