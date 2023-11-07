@@ -1,58 +1,36 @@
-import Item from "@/model/Item";
-import { styled } from "styled-components";
+import { ReactElement } from 'react';
+import { styled } from 'styled-components';
 
 interface TooltipProps {
-  ChildComponent: JSX.Element;
-  dir: "right" | "left" | "top" | "bottom";
-  quality: "일반" | "고급" | "희귀" | "영웅" | undefined;
+  ChildComponent: ReactElement;
+  dir: 'right' | 'left' | 'top' | 'bottom';
+  quality: '일반' | '고급' | '희귀' | '영웅' | undefined;
 }
 
-export default function Tooltip({
-  ChildComponent,
-  dir,
-  quality,
-}: TooltipProps) {
-  return (
-    <>
-      <TooltipContainer
-        dir={dir}
-        className="max-sm:w-[150px]"
-        quality={quality}
-      >
-        {ChildComponent}
-      </TooltipContainer>
-    </>
-  );
-}
-
-function q_color(quality: string | undefined) {
+function qColor(quality: string | undefined) {
   switch (quality) {
-    case "일반":
-      return "white";
-      break;
-    case "고급":
-      return "#00ff00";
-      break;
-    case "희귀":
-      return "#0070dd";
-      break;
-    case "영웅":
-      return "#9535e1";
-      break;
+    case '일반':
+      return 'white';
+    case '고급':
+      return '#00ff00';
+    case '희귀':
+      return '#0070dd';
+    case '영웅':
+      return '#9535e1';
     default:
-      return "gray";
-      break;
+      return 'gray';
   }
-}
-interface TooltipContainer extends QualityProps {
-  dir: "right" | "left" | "top" | "bottom";
 }
 
 interface QualityProps {
   quality: `일반` | `고급` | `희귀` | `영웅` | undefined;
 }
 
-const TooltipContainer = styled.div<TooltipContainer>`
+interface ITooltipContainer extends QualityProps {
+  dir: 'right' | 'left' | 'top' | 'bottom';
+}
+
+const TooltipContainer = styled.div<ITooltipContainer>`
   display: flex;
   position: relative;
   width: 300px;
@@ -61,13 +39,25 @@ const TooltipContainer = styled.div<TooltipContainer>`
   left: 60px;
 
   top: -120px;
-  outline: 2px solid ${(props) => q_color(props.quality)};
+  outline: 2px solid ${(props) => qColor(props.quality)};
   border-radius: 5px;
   flex-flow: column;
   padding: 5px;
   z-index: 100;
   @media (max-width: 768px) {
     width: 150px;
-    left: ${(props) => (props.dir === "left" ? "-160px" : "60px")};
+    left: ${(props) => (props.dir === 'left' ? '-160px' : '60px')};
   }
 `;
+
+export default function Tooltip({
+  ChildComponent,
+  dir,
+  quality,
+}: TooltipProps) {
+  return (
+    <TooltipContainer dir={dir} className="max-sm:w-[150px]" quality={quality}>
+      {ChildComponent}
+    </TooltipContainer>
+  );
+}

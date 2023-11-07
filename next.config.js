@@ -1,9 +1,8 @@
 /**
  * @type {import('next').NextConfig}
  */
-const nextConfig = {};
 
-module.exports = {
+const nextConfig = {
   reactStrictMode: true,
   // api: {
   //   bodyParser: {
@@ -11,11 +10,8 @@ module.exports = {
   //   },
   // },
   images: {
-    domains: ["i.namu.wiki", "cafeptthumb-phinf.pstatic.net"],
+    domains: ['i.namu.wiki', 'cafeptthumb-phinf.pstatic.net'],
   },
 };
-// module.exports = {
-//   images: {
-//     domains: ["i.namu.wiki"],
-//   },
-// };
+
+module.exports = nextConfig;

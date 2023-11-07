@@ -1,5 +1,5 @@
-import GuildInfoArea from "@/components/GuildInfoArea";
-import WorldBuff from "@/components/WorldBuff";
+import GuildInfoArea from '@/components/GuildInfoArea';
+import WorldBuff from '@/components/WorldBuff';
 
 export default function GameInfos(): JSX.Element {
   return (

@@ -1,21 +1,46 @@
-"use client";
-import Item from "@/model/Item";
-import itemOutline from "../img/default.png";
-import { styled } from "styled-components";
-import { useRef, useState } from "react";
-import React from "react";
-import Tooltip from "./Tooltip";
-import ItemDiscription from "./ItemDiscriptcion";
+'use client';
+
+import React, { useRef, useState } from 'react';
+import { styled } from 'styled-components';
+
+import Item from '@/model/Item';
+
+import ItemDiscription from './ItemDiscriptcion';
+import Tooltip from './Tooltip';
 
 interface ItemComponentProps {
   item: Item | undefined;
-  dir: "right" | "left" | "top" | "bottom";
+  dir: 'right' | 'left' | 'top' | 'bottom';
 }
 
-export default function IconComponent({
-  item,
-  dir,
-}: ItemComponentProps): JSX.Element {
+interface Quality {
+  quality: `일반` | `고급` | `희귀` | `영웅` | undefined;
+}
+
+function qColor(quality: string | undefined) {
+  switch (quality) {
+    case '일반':
+      return 'white';
+    case '고급':
+      return '#00ff00';
+    case '희귀':
+      return '#0070dd';
+    case '영웅':
+      return '#9535e1';
+    default:
+      return 'gray';
+  }
+}
+
+const Container = styled.div<Quality>`
+  width: 50px;
+  height: 50px;
+  background-color: #282828;
+  outline: 2px solid ${(props) => qColor(props.quality)};
+  border-radius: 9px;
+`;
+
+export default function IconComponent({ item, dir }: ItemComponentProps) {
   const [isMouseEnter, setMouseEnter] = useState<boolean>();
   const containerRef = useRef<any>();
 
@@ -47,41 +72,9 @@ export default function IconComponent({
             dir={dir}
             quality={item.quality.name}
             ChildComponent={<ItemDiscription item={item} />}
-          ></Tooltip>
+          />
         )}
       </Container>
     </div>
   );
-}
-
-const Container = styled.div<Quality>`
-  width: 50px;
-  height: 50px;
-  background-color: #282828;
-  outline: 2px solid ${(props) => q_color(props.quality)};
-  border-radius: 9px;
-`;
-
-interface Quality {
-  quality: `일반` | `고급` | `희귀` | `영웅` | undefined;
-}
-
-function q_color(quality: string | undefined) {
-  switch (quality) {
-    case "일반":
-      return "white";
-      break;
-    case "고급":
-      return "#00ff00";
-      break;
-    case "희귀":
-      return "#0070dd";
-      break;
-    case "영웅":
-      return "#9535e1";
-      break;
-    default:
-      return "gray";
-      break;
-  }
 }

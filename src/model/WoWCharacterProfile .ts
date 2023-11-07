@@ -1,5 +1,5 @@
-import Item from "./Item";
-import Statistics from "./Statistics";
+import Item from './Item';
+import Statistics from './Statistics';
 
 interface SelfLink {
   href: string;
@@ -45,11 +45,6 @@ interface Realm {
   name: string;
   id: number;
   slug: string;
-}
-
-interface GuildFaction {
-  type: string;
-  name: string;
 }
 
 // Nested Guild object interface

@@ -1,9 +1,46 @@
-import Item from "@/model/Item";
-import { styled } from "styled-components";
+import { styled } from 'styled-components';
+
+import Item from '@/model/Item';
 
 interface ItemDiscriptionProps {
   item: Item;
 }
+
+function qColor(quality: string | undefined) {
+  switch (quality) {
+    case '일반':
+      return 'white';
+    case '고급':
+      return '#00ff00';
+    case '희귀':
+      return '#0070dd';
+    case '영웅':
+      return '#9535e1';
+    default:
+      return 'gray';
+  }
+}
+
+interface ContainerProps {
+  quality: `일반` | `고급` | `희귀` | `영웅` | undefined;
+}
+
+const ItemName = styled.span<ContainerProps>`
+  color: ${(props) => qColor(props.quality)};
+  font-size: small;
+  @media (max-width: 400px) {
+    font-size: 11px;
+  }
+`;
+
+const Dioscription = styled.p`
+  margin: 0;
+  font-size: smaller;
+  @media (max-width: 400px) {
+    font-size: 8px;
+  }
+`;
+
 export default function ItemDiscription({ item }: ItemDiscriptionProps) {
   return (
     <>
@@ -43,20 +80,16 @@ export default function ItemDiscription({ item }: ItemDiscriptionProps) {
         )}
 
         {item.requirements && (
-          <>
-            <Dioscription>
-              {item.requirements.level?.display_string}
-            </Dioscription>
-          </>
+          <Dioscription>{item.requirements.level?.display_string}</Dioscription>
         )}
 
         {item.requirements && (
           <Dioscription>
             {`아이템레벨 ${
               Number(
-                item.requirements.level?.display_string.split(" ")[
-                  item.requirements.level.display_string.split(" ").length - 1
-                ]
+                item.requirements.level?.display_string.split(' ')[
+                  item.requirements.level.display_string.split(' ').length - 1
+                ],
               ) + 5
             }`}
           </Dioscription>
@@ -73,43 +106,3 @@ export default function ItemDiscription({ item }: ItemDiscriptionProps) {
     </>
   );
 }
-
-function q_color(quality: string | undefined) {
-  switch (quality) {
-    case "일반":
-      return "white";
-      break;
-    case "고급":
-      return "#00ff00";
-      break;
-    case "희귀":
-      return "#0070dd";
-      break;
-    case "영웅":
-      return "#9535e1";
-      break;
-    default:
-      return "gray";
-      break;
-  }
-}
-
-interface ContainerProps {
-  quality: `일반` | `고급` | `희귀` | `영웅` | undefined;
-}
-
-const ItemName = styled.span<ContainerProps>`
-  color: ${(props) => q_color(props.quality)};
-  font-size: small;
-  @media (max-width: 400px) {
-    font-size: 11px;
-  }
-`;
-
-const Dioscription = styled.p`
-  margin: 0;
-  font-size: smaller;
-  @media (max-width: 400px) {
-    font-size: 8px;
-  }
-`;

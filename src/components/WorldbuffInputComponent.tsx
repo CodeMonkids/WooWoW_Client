@@ -1,6 +1,6 @@
-import { Dispatch, RefObject, SetStateAction, useRef, useState } from "react";
-import { Spacing } from "../styledComponents";
-import { log } from "console";
+import { Dispatch, RefObject, SetStateAction, useRef } from 'react';
+
+import Spacing from '../styledComponents';
 
 interface WorldbuffInputComponentProps {
   arrayControl: Dispatch<SetStateAction<any[]>>;
@@ -13,28 +13,11 @@ export default function WorldbuffInputComponent({
   id,
   buffDatasControl,
 }: WorldbuffInputComponentProps): JSX.Element {
-  const adminkeyRef: RefObject<HTMLInputElement> =
-    useRef<HTMLInputElement>(null);
   const buffDataRef: RefObject<HTMLInputElement> =
-    useRef<HTMLInputElement>(null);
-  const adminkeySaveRef: RefObject<HTMLInputElement> =
     useRef<HTMLInputElement>(null);
   const weekRef: RefObject<HTMLSelectElement> = useRef<HTMLSelectElement>(null);
   const ampmRef: RefObject<HTMLSelectElement> = useRef<HTMLSelectElement>(null);
   const timeRef: RefObject<HTMLSelectElement> = useRef<HTMLSelectElement>(null);
-
-  const [buffData, setBuffData] = useState<string>();
-
-  function clickCheck() {
-    const val = `${weekRef.current?.value} ${ampmRef.current?.value} ${timeRef.current?.value}  ${buffDataRef.current?.value}`;
-    // console.log(val);
-    buffDatasControl((pre) => {
-      const newArray = [...pre];
-      newArray[id] = val;
-      return newArray;
-    });
-    return val;
-  }
 
   function syncValue() {
     const val = `${weekRef.current?.value} ${ampmRef.current?.value} ${timeRef.current?.value}  ${buffDataRef.current?.value}`;
@@ -91,7 +74,7 @@ export default function WorldbuffInputComponent({
         }}
       >
         {Array.from({ length: 12 }, (_, i) => i + 1).map((num) => (
-          <option key={num} value={num + `시`}>
+          <option key={num} value={`${num}시`}>
             {num}시
           </option>
         ))}

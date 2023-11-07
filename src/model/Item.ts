@@ -64,32 +64,32 @@ export default interface Item {
         display_string: string;
         color: { r: number; g: number; b: number; a: number };
       };
-    }
+    },
   ];
   spells?: [
     {
       spell: { key: { href: string }; name: string; id: number };
-      description: String;
-    }
+      description: string;
+    },
   ];
   sell_price: {
     value: number;
     display_strings: {
-      header: String;
-      gold: String;
-      silver: String;
-      copper: String;
+      header: string;
+      gold: string;
+      silver: string;
+      copper: string;
     };
   };
   requirements: {
     level: {
       value: number;
-      display_string: String;
+      display_string: string;
     };
   };
   durability: {
     value: number;
-    display_string: String;
+    display_string: string;
   };
   weapon?: {
     damage: {
