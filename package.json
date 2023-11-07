@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "eslint \"./**/*.{ts,tsx,js,jsx}\"",
     "lint:fix": "eslint --fix \"./**/*.{ts,tsx,js,jsx}\"",
-    "format": "prettier --write \"./**/*.{ts,tsx,js,jsx}\" --config ./.prettierrc.json"
+    "format": "prettier --write \"./**/*.{ts,tsx,js,jsx}\" --config ./.prettierrc"
   },
   "dependencies": {
     "@vercel/analytics": "^1.1.1",
