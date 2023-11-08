@@ -33,7 +33,12 @@ export default function ProfileArea() {
         alert(`네트워크에러발생`);
         return;
       }
-      setCharacterData((data) => [...data, response.data]);
+      const character = response.data;
+      setCharacterData((data) => {
+        const isReduplicate = data.findIndex((el) => el.id === character.id);
+        if (isReduplicate < 0) return [...data, character];
+        return data;
+      });
     } catch (err) {
       alert(`${name} 캐릭터를 찾을 수 없습니다.`);
       console.error(err);
