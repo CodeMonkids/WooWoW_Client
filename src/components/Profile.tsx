@@ -4,18 +4,19 @@ import Image from 'next/image';
 import { useState } from 'react';
 import { styled } from 'styled-components';
 
+import { CharacterClass } from '@/model/type';
 import WoWCharacterProfile from '@/model/WoWCharacterProfile ';
 
 import tomb from '../img/coffin.png';
-import druid from '../img/druidIcon.webp';
-import hunter from '../img/hunterIcon.webp';
-import junsa from '../img/knightIcon.webp';
-import bubsa from '../img/magicionIcon.webp';
-import paladin from '../img/paladinIcon.webp';
-import saje from '../img/priestIcon.webp';
-import dotgu from '../img/thifeIcon.webp';
+import DRUID_ICON from '../img/druidIcon.webp';
+import HUNTER_ICON from '../img/hunterIcon.webp';
+import WARRIOR_ICON from '../img/knightIcon.webp';
+import WIZARD_ICON from '../img/magicionIcon.webp';
+import PALADIN_ICON from '../img/PALADIN_ICONIcon.webp';
+import PRIEST_ICON from '../img/priestIcon.webp';
+import BANDIT_ICON from '../img/thifeIcon.webp';
 import wak from '../img/wak.jpg';
-import blackbubsa from '../img/warlockIcon.webp';
+import DARK_WIZARD_ICON from '../img/warlockIcon.webp';
 import Modal from './Modal';
 
 interface ContainerProps {
@@ -63,57 +64,40 @@ export interface CharacterProps {
 
 function Profile({ characterData }: CharacterProps) {
   //
-  const [isModalon, setIsModalOn] = useState<boolean>(false);
+  const [isModal, setIsModal] = useState<boolean>(false);
 
-  //
-  function classIcon(className: string) {
-    switch (className) {
-      case '도적':
-        return dotgu;
-      case '마법사':
-        return bubsa;
-      case '성기사':
-        return paladin;
-      case '사제':
-        return saje;
-      case '흑마법사':
-        return blackbubsa;
-      case '사냥꾼':
-        return hunter;
-      case '드루이드':
-        return druid;
-      case '전사':
-        return junsa;
+  function getClassIcon(className: string) {
+    const formatClassIcon: { [key: string]: string } = {
+      [CharacterClass.BANDIT]: BANDIT_ICON,
+      [CharacterClass.WIZARD]: WIZARD_ICON,
+      [CharacterClass.PALADIN]: PALADIN_ICON,
+      [CharacterClass.PRIEST]: PRIEST_ICON,
+      [CharacterClass.DARK_WIZARD]: DARK_WIZARD_ICON,
+      [CharacterClass.HUNTER]: HUNTER_ICON,
+      [CharacterClass.DRUID]: DRUID_ICON,
+      [CharacterClass.WARRIOR]: WARRIOR_ICON,
       default:
-        return 'https://i.namu.wiki/i/8Uvmcr2FAPyGoA_61zzO5VaAntOi_Rz2lUB1QU3xjq3bplgWOVNYXSKWgHba1eZz2WyXng3wIESlK1gE0qMjlA.webp';
-    }
+        'https://i.namu.wiki/i/8Uvmcr2FAPyGoA_61zzO5VaAntOi_Rz2lUB1QU3xjq3bplgWOVNYXSKWgHba1eZz2WyXng3wIESlK1gE0qMjlA.webp',
+    };
+    return formatClassIcon[className] || formatClassIcon.default;
   }
 
-  function clickContainer() {
-    setIsModalOn(true);
+  function onClickContainer() {
+    setIsModal(true);
   }
-  function clickcloseModal() {
-    setIsModalOn(false);
+  function onCloseModal() {
+    setIsModal(false);
   }
 
   return (
     <div>
-      {/* <div
-        className="w-[30px] h-[30px] absolute translate-x-[80px] translate-y-[10px] bg-red-700 rounded-tr-[10px] text-amber-400 flex justify-center items-center focus pointer-events-none z-100 rounded-bl-[10px ]"
-        onClick={() => {
-          console.log("닫기");
-        }}
-      >
-        X
-      </div> */}
       <Container
         onClick={() => {
-          clickContainer();
+          onClickContainer();
         }}
         isghost={characterData.is_ghost.toString() as 'true' | 'false'}
       >
         <ProfileContainer>
-          {/* <PlayerImg src={wak} /> */}
           <Image
             className="h-[100px] rounded-tl-[10px] rounded-tr-[10px]"
             src={wak}
@@ -130,7 +114,7 @@ function Profile({ characterData }: CharacterProps) {
         <Info>
           <Image
             className="rounded-bl-[10px] "
-            src={classIcon(characterData.character_class.name)}
+            src={getClassIcon(characterData.character_class.name)}
             width={30}
             height={30}
             alt=""
@@ -140,8 +124,8 @@ function Profile({ characterData }: CharacterProps) {
           </span>
         </Info>
       </Container>
-      {isModalon && (
-        <Modal closeFunction={clickcloseModal} characterData={characterData} />
+      {isModal && (
+        <Modal closeFunction={onCloseModal} characterData={characterData} />
       )}
     </div>
   );
