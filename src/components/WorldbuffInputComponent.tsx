@@ -1,6 +1,6 @@
 import { Dispatch, RefObject, SetStateAction, useRef } from 'react';
 
-import Spacing from '../styledComponents';
+import Spacing from './styledComponents';
 
 interface WorldbuffInputComponentProps {
   arrayControl: Dispatch<SetStateAction<any[]>>;

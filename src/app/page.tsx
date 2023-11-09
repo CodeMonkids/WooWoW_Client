@@ -3,9 +3,9 @@
 import Image from 'next/image';
 
 import ProfileArea from '@/components/ProfileArea';
+import wowHardcoreLogo from '@/img/WOW_Classic_Hardcore_Logo_enUS.png';
 
 import GameInfos from '../components/GameInfos';
-import wowHardcoreLogo from '../img/WOW_Classic_Hardcore_Logo_enUS.png';
 
 export default function Home() {
   console.log('env:', process.env.NEXT_PUBLIC_SERVER_URL);

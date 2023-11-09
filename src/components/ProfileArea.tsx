@@ -6,9 +6,9 @@ import { FormEvent, useEffect, useRef, useState } from 'react';
 import stringJson from '@/asset/json/strings.json';
 import WoWCharacterProfile from '@/model/WoWCharacterProfile ';
 
-import Spacing from '../styledComponents';
 import LevelStep from './LevelStep.client';
 import Loading from './Loading';
+import Spacing from './styledComponents';
 
 const defaultNames = [
   `줄건줘`,
