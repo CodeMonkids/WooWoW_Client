@@ -12,7 +12,7 @@ import DRUID_ICON from '../img/druidIcon.webp';
 import HUNTER_ICON from '../img/hunterIcon.webp';
 import WARRIOR_ICON from '../img/knightIcon.webp';
 import WIZARD_ICON from '../img/magicionIcon.webp';
-import PALADIN_ICON from '../img/PALADIN_ICONIcon.webp';
+import PALADIN_ICON from '../img/paladinIcon.webp';
 import PRIEST_ICON from '../img/priestIcon.webp';
 import BANDIT_ICON from '../img/thifeIcon.webp';
 import wak from '../img/wak.jpg';
