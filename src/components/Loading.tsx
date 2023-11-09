@@ -1,6 +1,6 @@
 import Image from 'next/image';
 
-import Spacing from '../styledComponents';
+import Spacing from './styledComponents';
 
 export default function Loading() {
   return (

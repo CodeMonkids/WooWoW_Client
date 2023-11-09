@@ -7,9 +7,9 @@ import Item from '@/model/Item';
 import Statistics from '@/model/Statistics';
 import WoWCharacterProfile from '@/model/WoWCharacterProfile ';
 
-import Spacing from '../styledComponents';
 import IconComponent from './ItemComponent';
 import Loading from './Loading';
+import Spacing from './styledComponents';
 
 interface Props {
   characterData: WoWCharacterProfile;

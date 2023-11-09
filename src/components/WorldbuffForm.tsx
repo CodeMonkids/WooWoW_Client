@@ -6,7 +6,7 @@ import { RefObject, useEffect, useRef, useState } from 'react';
 
 import GameInfos from '@/components/GameInfos';
 
-import Spacing from '../styledComponents';
+import Spacing from './styledComponents';
 import WorldbuffInputComponent from './WorldbuffInputComponent';
 
 export default function WorldbuffForm(): JSX.Element {
