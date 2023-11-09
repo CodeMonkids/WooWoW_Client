@@ -1,13 +1,12 @@
 'use client';
 
-import Image from 'next/image';
-import { useState } from 'react';
-import { styled } from 'styled-components';
+import Image, { StaticImageData } from 'next/image';
+import { ReactNode, useState } from 'react';
 
 import { CharacterClass } from '@/model/type';
 import WoWCharacterProfile from '@/model/WoWCharacterProfile ';
 
-import tomb from '../img/coffin.png';
+import Tomb_IMAGE from '../img/coffin.png';
 import DRUID_ICON from '../img/druidIcon.webp';
 import HUNTER_ICON from '../img/hunterIcon.webp';
 import WARRIOR_ICON from '../img/knightIcon.webp';
@@ -19,55 +18,38 @@ import wak from '../img/wak.jpg';
 import DARK_WIZARD_ICON from '../img/warlockIcon.webp';
 import Modal from './Modal';
 
-interface ContainerProps {
-  isghost: 'true' | 'false';
+interface FormatClassIcon {
+  [key: string]: StaticImageData;
 }
 
-const Container = styled.div<ContainerProps>`
-  cursor: pointer;
-  display: flex;
-  flex-flow: column;
-  align-items: center;
-  outline: black solid 1px;
-  width: 100px;
-  height: auto;
-  margin: 10px;
-  background-color: ${(props) => (props.isghost === 'true' ? `gray` : 'white')};
-  border-radius: 10px;
-  box-shadow: 0 0 10px 0 #575757;
-`;
+interface ContainerProps {
+  children: ReactNode;
+  isGhost: boolean;
+  onClick: () => void;
+}
 
-const ProfileContainer = styled.div`
-  display: flex;
-  flex-flow: column;
-  align-items: center;
-  width: auto;
-  height: auto;
-  margin: 0;
-`;
-
-const PlayerName = styled.span`
-  font-size: 14px;
-`;
-
-const Info = styled.div`
-  display: flex;
-  justify-content: start;
-  outline: 1px black solid;
-  width: 100%;
-  border-radius: 0 0 10px 10px;
-`;
+function Container({ children, isGhost, onClick }: ContainerProps) {
+  return (
+    <div
+      onClick={onClick}
+      className={`w-[100px] h-auto flex flex-col items-center m-[10px] ${
+        isGhost ? 'bg-gray-400' : 'bg-white'
+      } rounded-xl shadow-[0_0_10px_0] shadow-gray-500 outline outline-black outline-1 cursor-pointer`}
+    >
+      {children}
+    </div>
+  );
+}
 
 export interface CharacterProps {
   characterData: WoWCharacterProfile;
 }
 
 function Profile({ characterData }: CharacterProps) {
-  //
   const [isModal, setIsModal] = useState<boolean>(false);
 
   function getClassIcon(className: string) {
-    const formatClassIcon: { [key: string]: string } = {
+    const formatClassIcon: FormatClassIcon = {
       [CharacterClass.BANDIT]: BANDIT_ICON,
       [CharacterClass.WIZARD]: WIZARD_ICON,
       [CharacterClass.PALADIN]: PALADIN_ICON,
@@ -76,10 +58,8 @@ function Profile({ characterData }: CharacterProps) {
       [CharacterClass.HUNTER]: HUNTER_ICON,
       [CharacterClass.DRUID]: DRUID_ICON,
       [CharacterClass.WARRIOR]: WARRIOR_ICON,
-      default:
-        'https://i.namu.wiki/i/8Uvmcr2FAPyGoA_61zzO5VaAntOi_Rz2lUB1QU3xjq3bplgWOVNYXSKWgHba1eZz2WyXng3wIESlK1gE0qMjlA.webp',
     };
-    return formatClassIcon[className] || formatClassIcon.default;
+    return formatClassIcon[className];
   }
 
   function onClickContainer() {
@@ -91,13 +71,8 @@ function Profile({ characterData }: CharacterProps) {
 
   return (
     <div>
-      <Container
-        onClick={() => {
-          onClickContainer();
-        }}
-        isghost={characterData.is_ghost.toString() as 'true' | 'false'}
-      >
-        <ProfileContainer>
+      <Container onClick={onClickContainer} isGhost={characterData.is_ghost}>
+        <div className="w-auto h-auto flex flex-col items-center m-0 ">
           <Image
             className="h-[100px] rounded-tl-[10px] rounded-tr-[10px]"
             src={wak}
@@ -106,12 +81,16 @@ function Profile({ characterData }: CharacterProps) {
             alt=""
           />
           {characterData.is_ghost && (
-            <Image className="h-[100px] w-[100px] absolute" src={tomb} alt="" />
+            <Image
+              className="h-[100px] w-[100px] absolute"
+              src={Tomb_IMAGE}
+              alt=""
+            />
           )}
 
-          <PlayerName className="text-black">{characterData.name}</PlayerName>
-        </ProfileContainer>
-        <Info>
+          <div className="text-black text-sm ">{characterData.name}</div>
+        </div>
+        <div className="w-full flex justify-start rounded-b-xl outline outline-black outline-1">
           <Image
             className="rounded-bl-[10px] "
             src={getClassIcon(characterData.character_class.name)}
@@ -122,7 +101,7 @@ function Profile({ characterData }: CharacterProps) {
           <span className="pointer-events-none text-black h-[100%] max-sm:text-[23px]">
             {characterData.level}레벨
           </span>
-        </Info>
+        </div>
       </Container>
       {isModal && (
         <Modal closeFunction={onCloseModal} characterData={characterData} />

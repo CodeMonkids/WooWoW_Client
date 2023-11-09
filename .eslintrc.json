@@ -35,6 +35,9 @@
     "simple-import-sort/exports": "error", // eslint-plugin-simple-import-sort 설정
     "react/require-default-props": "off" , //component prop 타입체크 끄기
     "react/jsx-no-bind" : "off" ,//컴포넌트 prop 함수 인지 체크 끄기
-    "import/prefer-default-export": "off" //export default 강제 룰 끄기
+    "import/prefer-default-export": "off" ,//export default 강제 룰 끄기
+    "jsx-a11y/click-events-have-key-events": "off",
+    "jsx-a11y/no-static-element-interactions": "off"
+
   }
 }
