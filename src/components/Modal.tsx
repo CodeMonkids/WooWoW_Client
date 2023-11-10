@@ -4,7 +4,7 @@ import { ReactNode, useEffect, useRef, useState } from 'react';
 
 import Item from '@/model/Item';
 import Statistics from '@/model/Statistics';
-import { StatList } from '@/model/type';
+import { Parts, StatList } from '@/model/type';
 import WoWCharacterProfile from '@/model/WoWCharacterProfile ';
 
 import IconComponent from './ItemComponent';
@@ -16,9 +16,27 @@ interface Props {
   closeFunction: () => void;
 }
 
-const leftParts = ['머리', '목', '어깨', '등', '가슴', '속옷', '겉옷', '손목'];
-const rightParts = ['손', '허리', '다리', '발', '반지 1', '반지 2', '장신구 1'];
-const bottomParts = ['주장비', '보조장비', '원거리 장비'];
+const leftParts = [
+  Parts['머리'],
+  Parts['목'],
+  Parts['어깨'],
+  Parts['등'],
+  Parts['가슴'],
+  Parts['속옷'],
+  Parts['겉옷'],
+  Parts['손목'],
+];
+const rightParts = [
+  Parts['손'],
+  Parts['허리'],
+  Parts['다리'],
+  Parts['발'],
+  Parts['반지 1'],
+  Parts['반지 2'],
+  Parts['장신구 1'],
+  Parts['장신구 2'],
+];
+const bottomParts = [Parts['주장비'], Parts['보조장비'], Parts['원거리 장비']];
 
 function ItemList({ children, id }: { children: ReactNode; id?: string }) {
   return (
@@ -33,7 +51,7 @@ export default function Modal({ characterData, closeFunction }: Props) {
   const [characterDataInfo, setCharacterDataInfo] =
     useState<WoWCharacterProfile | null>(null);
   const [stasticData, setStasticData] = useState<Statistics | null>(null);
-  const [parts, setParts] = useState<{ [key: string]: Item }>({});
+  const [parts, setParts] = useState(new Map<Parts, Item>());
 
   const statList: StatList = {
     left: [
@@ -122,13 +140,12 @@ export default function Modal({ characterData, closeFunction }: Props) {
     if (characterDataInfo) {
       const { items } = characterDataInfo.equipment;
       items.forEach((item: Item) => {
-        setParts((state) => {
-          return { ...state, [item.slot.name]: item };
-        });
+        setParts((prev) => new Map(prev.set(Parts[item.slot.name], item)));
       });
       setStasticData(characterDataInfo.statistics.data);
     }
   }, [characterDataInfo]);
+
   return (
     <div>
       <dialog
@@ -173,7 +190,7 @@ export default function Modal({ characterData, closeFunction }: Props) {
             <div id="메인배열" className="flex ">
               <ItemList id="왼쪽아이템창">
                 {leftParts.map((name) => {
-                  const slot = parts[name];
+                  const slot = parts.get(Parts[name]);
                   return (
                     <div key={name}>
                       <IconComponent item={slot} dir="right" />
@@ -271,7 +288,7 @@ export default function Modal({ characterData, closeFunction }: Props) {
                 <Spacing height={5} />
                 <div id="하단아이템배열" className="flex justify-center">
                   {bottomParts.map((name) => {
-                    const slot = parts[name];
+                    const slot = parts.get(Parts[name]);
                     return (
                       <div key={name}>
                         <Spacing width={3} />
@@ -284,7 +301,7 @@ export default function Modal({ characterData, closeFunction }: Props) {
               </div>
               <ItemList id="오른쪽아이템배열">
                 {rightParts.map((name) => {
-                  const slot = parts[name];
+                  const slot = parts.get(Parts[name]);
                   return (
                     <div key={name}>
                       <IconComponent item={slot} dir="left" />
