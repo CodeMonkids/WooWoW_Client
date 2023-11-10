@@ -1,33 +1,21 @@
 import { ReactElement } from 'react';
 import { styled } from 'styled-components';
 
+import qColor from '@/lib/qColor';
+import { Dir, Quality } from '@/model/type';
+
 interface TooltipProps {
   ChildComponent: ReactElement;
-  dir: 'right' | 'left' | 'top' | 'bottom';
-  quality: '일반' | '고급' | '희귀' | '영웅' | undefined;
-}
-
-function qColor(quality: string | undefined) {
-  switch (quality) {
-    case '일반':
-      return 'white';
-    case '고급':
-      return '#00ff00';
-    case '희귀':
-      return '#0070dd';
-    case '영웅':
-      return '#9535e1';
-    default:
-      return 'gray';
-  }
+  dir: Dir;
+  quality: Quality | undefined;
 }
 
 interface QualityProps {
-  quality: `일반` | `고급` | `희귀` | `영웅` | undefined;
+  quality: Quality | undefined;
 }
 
 interface ITooltipContainer extends QualityProps {
-  dir: 'right' | 'left' | 'top' | 'bottom';
+  dir: Dir;
 }
 
 const TooltipContainer = styled.div<ITooltipContainer>`
@@ -37,8 +25,6 @@ const TooltipContainer = styled.div<ITooltipContainer>`
   height: auto;
   background-color: #080d21;
   left: 60px;
-
-  top: -120px;
   outline: 2px solid ${(props) => qColor(props.quality)};
   border-radius: 5px;
   flex-flow: column;
@@ -46,7 +32,7 @@ const TooltipContainer = styled.div<ITooltipContainer>`
   z-index: 100;
   @media (max-width: 768px) {
     width: 150px;
-    left: ${(props) => (props.dir === 'left' ? '-160px' : '60px')};
+    left: ${(props) => (props.dir === Dir.LEFT ? '-160px' : '60px')};
   }
 `;
 

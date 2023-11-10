@@ -5,6 +5,7 @@ import { styled } from 'styled-components';
 
 import Item from '@/model/Item';
 import Statistics from '@/model/Statistics';
+import { Dir } from '@/model/type';
 import WoWCharacterProfile from '@/model/WoWCharacterProfile ';
 
 import IconComponent from './ItemComponent';
@@ -247,7 +248,7 @@ export default function Modal({ characterData, closeFunction }: Props) {
                   (slot, idx) => {
                     return (
                       <div key={idx}>
-                        <IconComponent item={slot} dir="right" />
+                        <IconComponent item={slot} dir={Dir.RIGHT} />
                         <Spacing height={5} />
                       </div>
                     );
@@ -371,7 +372,7 @@ export default function Modal({ characterData, closeFunction }: Props) {
                     return (
                       <div key={idx}>
                         <Spacing width={3} />
-                        <IconComponent item={slot} dir="left" />
+                        <IconComponent item={slot} dir={Dir.LEFT} />
                         <Spacing width={3} />
                       </div>
                     );
@@ -391,7 +392,7 @@ export default function Modal({ characterData, closeFunction }: Props) {
                 ].map((slot, idx) => {
                   return (
                     <div key={idx}>
-                      <IconComponent item={slot} dir="left" />
+                      <IconComponent item={slot} dir={Dir.LEFT} />
                       <Spacing height={5} />
                     </div>
                   );
