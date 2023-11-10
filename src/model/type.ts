@@ -8,3 +8,13 @@ export enum CharacterClass {
   'DRUID' = '드루이드',
   'WARRIOR' = '전사',
 }
+
+export interface Stat {
+  name: string;
+  effective: string | number | undefined;
+}
+
+export interface StatList {
+  left: Stat[];
+  right: Stat[];
+}
