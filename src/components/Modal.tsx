@@ -1,11 +1,11 @@
 import axios from 'axios';
 import Link from 'next/link';
-import { useEffect, useRef, useState } from 'react';
-import { styled } from 'styled-components';
+import { ReactNode, useEffect, useRef, useState } from 'react';
 
 import Item from '@/model/Item';
 import Statistics from '@/model/Statistics';
-import { Dir } from '@/model/type';
+import { Dir, Parts, StatList } from '@/model/type';
+        
 import WoWCharacterProfile from '@/model/WoWCharacterProfile ';
 
 import IconComponent from './ItemComponent';
@@ -17,20 +17,104 @@ interface Props {
   closeFunction: () => void;
 }
 
-const ItemList = styled.div`
-  padding: 5px;
-  display: flex;
-  flex-flow: column;
-`;
+const leftParts = [
+  Parts['머리'],
+  Parts['목'],
+  Parts['어깨'],
+  Parts['등'],
+  Parts['가슴'],
+  Parts['속옷'],
+  Parts['겉옷'],
+  Parts['손목'],
+];
+const rightParts = [
+  Parts['손'],
+  Parts['허리'],
+  Parts['다리'],
+  Parts['발'],
+  Parts['반지 1'],
+  Parts['반지 2'],
+  Parts['장신구 1'],
+  Parts['장신구 2'],
+];
+const bottomParts = [Parts['주장비'], Parts['보조장비'], Parts['원거리 장비']];
+
+function ItemList({ children, id }: { children: ReactNode; id?: string }) {
+  return (
+    <div id={id} className="flex flex-col p-[5px]">
+      {children}
+    </div>
+  );
+}
 
 export default function Modal({ characterData, closeFunction }: Props) {
   const modalRef = useRef<HTMLDialogElement>(null);
-  const [characterDatainfo, setcharacterDatainfo] =
+  const [characterDataInfo, setCharacterDataInfo] =
     useState<WoWCharacterProfile | null>(null);
-  const [equipmentData, setEquipment] = useState<Item[] | null>(null);
-  const [stasticsData, setStasticsData] = useState<Statistics | null>(null);
+  const [stasticData, setStasticData] = useState<Statistics | null>(null);
+  const [parts, setParts] = useState(new Map<Parts, Item>());
 
-  async function featchCharacterData(characterName: string) {
+  const statList: StatList = {
+    left: [
+      {
+        name: '힘',
+        effective: stasticData?.strength.effective,
+      },
+      {
+        name: '민첩성',
+        effective: stasticData?.agility.effective,
+      },
+      {
+        name: '체력',
+        effective: stasticData?.stamina.effective,
+      },
+      {
+        name: '지능',
+        effective: stasticData?.intellect.effective,
+      },
+      {
+        name: '정신력',
+        effective: stasticData?.spirit.effective,
+      },
+      {
+        name: '방어도',
+        effective: stasticData?.armor.effective,
+      },
+    ],
+    right: [
+      { name: '전투력', effective: stasticData?.attack_power },
+      {
+        name: '공격력',
+        effective: `${Math.round(
+          stasticData?.main_hand_damage_min ?? 0,
+        )}-${Math.round(stasticData?.main_hand_damage_max ?? 0)}`,
+      },
+      {
+        name: '초당공격력',
+        effective: Math.round(stasticData?.main_hand_dps ?? 0),
+      },
+      {
+        name: '최대체력',
+        effective: Math.round(stasticData?.health ?? 0),
+      },
+      {
+        name: '최대마나',
+        effective: Math.round(stasticData?.power ?? 0),
+      },
+      {
+        name: '데미지감소',
+        effective: `${Math.round(
+          ((stasticData?.armor.effective ?? 0) /
+            ((stasticData?.armor.effective ?? 0) +
+              85 * characterData.level +
+              400)) *
+            100,
+        )}%`,
+      },
+    ],
+  };
+
+  async function getCharacterData(characterName: string) {
     try {
       const response = await axios.get(
         `${process.env.NEXT_PUBLIC_SERVER_URL}/api/characterinfo`,
@@ -38,166 +122,30 @@ export default function Modal({ characterData, closeFunction }: Props) {
           params: { charactername: characterName },
         },
       );
-      setcharacterDatainfo(response.data);
+      setCharacterDataInfo(response.data);
     } catch (error) {
       console.error(error);
     }
   }
 
-  const [head, setHead] = useState<Item>();
-  const [neak, setNeak] = useState<Item>();
-  const [shoulders, setShoulders] = useState<Item>();
-  const [under, setUnder] = useState<Item>();
-  const [chest, setChest] = useState<Item>();
-  const [waist, setWaist] = useState<Item>();
-  const [legs, setLegs] = useState<Item>();
-  const [feet, setFeet] = useState<Item>();
-  const [wrist, setWrist] = useState<Item>();
-  const [hand, setHand] = useState<Item>();
-  const [finger1, setFinger1] = useState<Item>();
-  const [finger2, setFinger2] = useState<Item>();
-  const [trinket1, setTrinket1] = useState<Item>();
-  const [trinket2, setTrinket2] = useState<Item>();
-  const [back, setBack] = useState<Item>();
-  const [mainHand, setMainHand] = useState<Item>();
-  const [offHand, setOffHand] = useState<Item>();
-  const [rangedWeapon, setRangedWeapon] = useState<Item>();
-  const [out, setOut] = useState<Item>();
-
-  let mount = false;
-
-  function clickContainer() {
-    modalRef.current?.showModal();
-  }
-
   useEffect(() => {
-    if (mount) {
-      return;
-    }
-    clickContainer();
-    featchCharacterData(characterData.name);
-    mount = true;
+    modalRef.current?.close();
+    modalRef.current?.showModal();
   }, []);
 
   useEffect(() => {
-    if (characterDatainfo) {
-      setEquipment(characterDatainfo.equipment.items);
-      setStasticsData(characterDatainfo.statistics.data);
-    }
-  }, [characterDatainfo]);
-
-  function clickCloseButton() {
-    // console.log("닫기버튼 클릭됨");
-    if (closeFunction) {
-      closeFunction();
-    }
-  }
+    getCharacterData(characterData.name);
+  }, [characterData.name]);
 
   useEffect(() => {
-    equipmentData?.forEach(
-      (item: Item) => {
-        switch (item.slot.name) {
-          case '머리':
-            setHead(item);
-            break;
-          case '목':
-            setNeak(item);
-            break;
-          case '어깨':
-            setShoulders(item);
-            break;
-          case '등':
-            setBack(item);
-            break;
-          case '가슴':
-            setChest(item);
-            break;
-          case '속옷':
-            setUnder(item);
-            break;
-          case '겉옷':
-            setOut(item);
-            break;
-          case '손목':
-            setWrist(item);
-            break;
-          case '손':
-            setHand(item);
-            break;
-          case '허리':
-            setWaist(item);
-            break;
-          case '다리':
-            setLegs(item);
-            break;
-          case '발':
-            setFeet(item);
-            break;
-          case '반지 1':
-            setFinger1(item);
-            break;
-          case '반지 2':
-            setFinger2(item);
-            break;
-          case '장신구 1':
-            setTrinket1(item);
-            break;
-          case '장신구 2':
-            setTrinket2(item);
-            break;
-          case '주장비':
-            setMainHand(item);
-            break;
-          case '원거리 장비':
-            setRangedWeapon(item);
-            break;
-          case '보조장비':
-            setOffHand(item);
-            break;
-          default:
-            break;
-        }
-      },
-      [equipmentData],
-    );
-  });
-
-  interface RstatsProps {
-    name: string;
-    effective: string | number | undefined;
-  }
-
-  const rstats: RstatsProps[] = [
-    { name: '전투력', effective: stasticsData?.attack_power },
-    {
-      name: '공격력',
-      effective: `${Math.round(
-        stasticsData?.main_hand_damage_min ?? 0,
-      )}-${Math.round(stasticsData?.main_hand_damage_max ?? 0)}`,
-    },
-    {
-      name: '초당공격력',
-      effective: Math.round(stasticsData?.main_hand_dps ?? 0),
-    },
-    {
-      name: '최대체력',
-      effective: Math.round(stasticsData?.health ?? 0),
-    },
-    {
-      name: '최대마나',
-      effective: Math.round(stasticsData?.power ?? 0),
-    },
-    {
-      name: '데미지감소',
-      effective: `${Math.round(
-        ((stasticsData?.armor.effective ?? 0) /
-          ((stasticsData?.armor.effective ?? 0) +
-            85 * characterData.level +
-            400)) *
-          100,
-      )}%`,
-    },
-  ];
+    if (characterDataInfo) {
+      const { items } = characterDataInfo.equipment;
+      items.forEach((item: Item) => {
+        setParts((prev) => new Map(prev.set(Parts[item.slot.name], item)));
+      });
+      setStasticData(characterDataInfo.statistics.data);
+    }
+  }, [characterDataInfo]);
 
   return (
     <div>
@@ -223,9 +171,7 @@ export default function Modal({ characterData, closeFunction }: Props) {
             <button
               type="button"
               id="닫기버튼"
-              onClick={() => {
-                clickCloseButton();
-              }}
+              onClick={closeFunction}
               className="w-[50px] h-[35px] bg-red-800 justify-center items-center justify-self-end flex text-amber-300 cursor-pointer rounded-tr-lg"
             >
               X
@@ -240,20 +186,19 @@ export default function Modal({ characterData, closeFunction }: Props) {
               {characterData?.character_class.name}
             </p>
           </div>
-          {!characterDatainfo && <Loading />}
-          {characterDatainfo && (
+          {!characterDataInfo && <Loading />}
+          {characterDataInfo && (
             <div id="메인배열" className="flex ">
               <ItemList id="왼쪽아이템창" className="flex flex-col ">
-                {[head, neak, shoulders, back, chest, under, out, wrist].map(
-                  (slot, idx) => {
-                    return (
-                      <div key={idx}>
-                        <IconComponent item={slot} dir={Dir.RIGHT} />
-                        <Spacing height={5} />
-                      </div>
-                    );
-                  },
-                )}
+                {leftParts.map((name) => {
+                  const slot = parts.get(Parts[name]);
+                  return (
+                    <div key={name}>
+                      <IconComponent item={slot} dir="right" />
+                      <Spacing height={5} />
+                    </div>
+                  );
+                })}
               </ItemList>
               <div
                 id="캐릭터렌더,스텟"
@@ -270,29 +215,29 @@ export default function Modal({ characterData, closeFunction }: Props) {
                   <div className="flex flex-col">
                     <div className="w-[30px] h-[30px] rounded-sm bg-gray-400 m-[3px] ring-[2px] ring-gray-500">
                       <p className="text-white">
-                        {stasticsData?.holy_resistance.effective}
+                        {stasticData?.holy_resistance.effective}
                       </p>
                     </div>
 
                     <div className="w-[30px] h-[30px] rounded-sm bg-red-800 m-[3px] ring-[2px] ring-gray-500">
                       <p className="text-white">
                         {' '}
-                        {stasticsData?.fire_resistance.effective}
+                        {stasticData?.fire_resistance.effective}
                       </p>
                     </div>
                     <div className="w-[30px] h-[30px] rounded-sm bg-green-800 m-[3px] ring-[2px] ring-gray-500">
                       <p className="text-white">
-                        {stasticsData?.nature_resistance.effective}
+                        {stasticData?.nature_resistance.effective}
                       </p>{' '}
                     </div>
                     <div className="w-[30px] h-[30px] rounded-sm bg-blue-800 m-[3px] ring-[2px] ring-gray-500">
                       <p className="text-white">
-                        {stasticsData?.arcane_resistance.effective}
+                        {stasticData?.arcane_resistance.effective}
                       </p>{' '}
                     </div>
                     <div className="w-[30px] h-[30px] rounded-sm bg-purple-800 m-[3px] ring-[2px] ring-gray-500">
                       <p className="text-white">
-                        {stasticsData?.shadow_resistance.effective}
+                        {stasticData?.shadow_resistance.effective}
                       </p>{' '}
                     </div>
                   </div>
@@ -305,34 +250,9 @@ export default function Modal({ characterData, closeFunction }: Props) {
                     id="캐릭터 코어스텟"
                     className="w-[40%] h-[auto] bg-stone-950 flex flex-col justify-start ring-zinc-400 ring-2 rounded-lg p-[2px] mr-1"
                   >
-                    {[
-                      {
-                        name: '힘',
-                        effective: stasticsData?.strength.effective,
-                      },
-                      {
-                        name: '민첩성',
-                        effective: stasticsData?.agility.effective,
-                      },
-                      {
-                        name: '체력',
-                        effective: stasticsData?.stamina.effective,
-                      },
-                      {
-                        name: '지능',
-                        effective: stasticsData?.intellect.effective,
-                      },
-                      {
-                        name: '정신력',
-                        effective: stasticsData?.spirit.effective,
-                      },
-                      {
-                        name: '방어도',
-                        effective: stasticsData?.armor.effective,
-                      },
-                    ].map((stat, idx) => {
+                    {statList.left.map((stat) => {
                       return (
-                        <div key={idx}>
+                        <div key={stat.name}>
                           <div className="flex justify-between m-[0]">
                             <p className="text-sm text-yellow-500 max-sm:text-xs">
                               {stat.name}
@@ -350,9 +270,9 @@ export default function Modal({ characterData, closeFunction }: Props) {
                     id="캐릭터 코어스텟"
                     className="w-[50%] h-[auto] bg-stone-950 flex flex-col justify-start ring-zinc-400 ring-2 rounded-lg p-[2px]"
                   >
-                    {rstats.map((stat, idx) => {
+                    {statList.right.map((stat) => {
                       return (
-                        <div key={idx}>
+                        <div key={stat.name}>
                           <div className="flex justify-between m-[0]">
                             <p className="text-sm text-yellow-500 max-sm:text-xs">
                               {stat.name}{' '}
@@ -368,9 +288,10 @@ export default function Modal({ characterData, closeFunction }: Props) {
                 </div>
                 <Spacing height={5} />
                 <div id="하단아이템배열" className="flex justify-center">
-                  {[mainHand, offHand, rangedWeapon].map((slot, idx) => {
+                  {bottomParts.map((name) => {
+                    const slot = parts.get(Parts[name]);
                     return (
-                      <div key={idx}>
+                      <div key={name}>
                         <Spacing width={3} />
                         <IconComponent item={slot} dir={Dir.LEFT} />
                         <Spacing width={3} />
@@ -380,18 +301,10 @@ export default function Modal({ characterData, closeFunction }: Props) {
                 </div>
               </div>
               <ItemList id="오른쪽아이템배열">
-                {[
-                  hand,
-                  waist,
-                  legs,
-                  feet,
-                  finger1,
-                  finger2,
-                  trinket1,
-                  trinket2,
-                ].map((slot, idx) => {
+                {rightParts.map((name) => {
+                  const slot = parts.get(Parts[name]);
                   return (
-                    <div key={idx}>
+                    <div key={name}>
                       <IconComponent item={slot} dir={Dir.LEFT} />
                       <Spacing height={5} />
                     </div>

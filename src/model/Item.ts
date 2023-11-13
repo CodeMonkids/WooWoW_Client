@@ -1,4 +1,4 @@
-import { Quality } from '@/model/type';
+import { Quality, Parts  } from '@/model/type';
 
 export default interface Item {
   item: {
@@ -9,7 +9,7 @@ export default interface Item {
   };
   slot: {
     type: string;
-    name: string;
+    name: Parts;
   };
   quantity: number;
   quality: {
