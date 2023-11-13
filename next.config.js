@@ -10,7 +10,11 @@ const nextConfig = {
   //   },
   // },
   images: {
-    domains: ['i.namu.wiki', 'cafeptthumb-phinf.pstatic.net'],
+    domains: [
+      'i.namu.wiki',
+      'cafeptthumb-phinf.pstatic.net',
+      'render.worldofwarcraft.com',
+    ],
   },
 };
 

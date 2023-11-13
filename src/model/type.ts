@@ -9,6 +9,21 @@ export enum CharacterClass {
   'WARRIOR' = '전사',
 }
 
+export enum Quality {
+  COMMON = '일반',
+  UNIQUE = '고급',
+  RARE = '희귀',
+  EPIC = '영웅',
+  DEFAULT = 'default',
+}
+
+export enum Dir {
+  RIGHT = 'right',
+  LEFT = 'left',
+  TOP = 'top',
+  BOTTOM = 'bottom',
+}
+  
 export interface Stat {
   name: string;
   effective: string | number | undefined;

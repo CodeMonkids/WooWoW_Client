@@ -1,4 +1,4 @@
-import { Parts } from '@/model/type';
+import { Quality, Parts  } from '@/model/type';
 
 export default interface Item {
   item: {
@@ -14,7 +14,7 @@ export default interface Item {
   quantity: number;
   quality: {
     type: string;
-    name: `일반` | `고급` | `희귀` | `영웅`;
+    name: Quality;
   };
   name?: string; // Optional property
   media: {

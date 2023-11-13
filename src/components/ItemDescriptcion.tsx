@@ -1,28 +1,15 @@
 import { styled } from 'styled-components';
 
+import qColor from '@/lib/qColor';
 import Item from '@/model/Item';
+import { Quality } from '@/model/type';
 
-interface ItemDiscriptionProps {
+interface Props {
   item: Item;
 }
 
-function qColor(quality: string | undefined) {
-  switch (quality) {
-    case '일반':
-      return 'white';
-    case '고급':
-      return '#00ff00';
-    case '희귀':
-      return '#0070dd';
-    case '영웅':
-      return '#9535e1';
-    default:
-      return 'gray';
-  }
-}
-
 interface ContainerProps {
-  quality: `일반` | `고급` | `희귀` | `영웅` | undefined;
+  quality: Quality | undefined;
 }
 
 const ItemName = styled.span<ContainerProps>`
@@ -33,7 +20,7 @@ const ItemName = styled.span<ContainerProps>`
   }
 `;
 
-const Dioscription = styled.p`
+const Description = styled.p`
   margin: 0;
   font-size: smaller;
   @media (max-width: 400px) {
@@ -41,50 +28,50 @@ const Dioscription = styled.p`
   }
 `;
 
-export default function ItemDiscription({ item }: ItemDiscriptionProps) {
+export default function ItemDescription({ item }: Props) {
   return (
     <>
       <ItemName quality={item.quality.name} className="flex">
         {item?.name}
       </ItemName>
       <span className="text-white">
-        <Dioscription>{item.binding?.name}</Dioscription>
+        <Description>{item.binding?.name}</Description>
 
         <div className="flex justify-between">
-          <Dioscription>{item.inventory_type?.name}</Dioscription>
-          <Dioscription className="mr-[20px]">
+          <Description>{item.inventory_type?.name}</Description>
+          <Description className="mr-[20px]">
             {item.item_subclass?.name}
-          </Dioscription>
+          </Description>
         </div>
 
-        <Dioscription>{item.armor?.display.display_string}</Dioscription>
+        <Description>{item.armor?.display.display_string}</Description>
 
         {item.stats?.map((stat, idx) => (
-          <Dioscription key={idx}>{stat.display.display_string}</Dioscription>
+          <Description key={idx}>{stat.display.display_string}</Description>
         ))}
 
         {item.durability && (
-          <Dioscription>{item.durability.display_string}</Dioscription>
+          <Description>{item.durability.display_string}</Description>
         )}
 
         {item.weapon && (
           <>
             <div className="flex justify-between">
-              <Dioscription>{item.weapon.damage.display_string}</Dioscription>
-              <Dioscription>
+              <Description>{item.weapon.damage.display_string}</Description>
+              <Description>
                 {item.weapon.attack_speed.display_string}
-              </Dioscription>
+              </Description>
             </div>
-            <Dioscription>{item.weapon.dps.display_string}</Dioscription>
+            <Description>{item.weapon.dps.display_string}</Description>
           </>
         )}
 
         {item.requirements && (
-          <Dioscription>{item.requirements.level?.display_string}</Dioscription>
+          <Description>{item.requirements.level?.display_string}</Description>
         )}
 
         {item.requirements && (
-          <Dioscription>
+          <Description>
             {`아이템레벨 ${
               Number(
                 item.requirements.level?.display_string.split(' ')[
@@ -92,14 +79,14 @@ export default function ItemDiscription({ item }: ItemDiscriptionProps) {
                 ],
               ) + 5
             }`}
-          </Dioscription>
+          </Description>
         )}
 
         {item.spells?.map((spell, idx) => {
           return (
-            <Dioscription className="text-green-500" key={idx}>
+            <Description className="text-green-500" key={idx}>
               {spell.description}
-            </Dioscription>
+            </Description>
           );
         })}
       </span>

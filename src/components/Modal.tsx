@@ -4,7 +4,8 @@ import { ReactNode, useEffect, useRef, useState } from 'react';
 
 import Item from '@/model/Item';
 import Statistics from '@/model/Statistics';
-import { Parts, StatList } from '@/model/type';
+import { Dir, Parts, StatList } from '@/model/type';
+        
 import WoWCharacterProfile from '@/model/WoWCharacterProfile ';
 
 import IconComponent from './ItemComponent';
@@ -188,7 +189,7 @@ export default function Modal({ characterData, closeFunction }: Props) {
           {!characterDataInfo && <Loading />}
           {characterDataInfo && (
             <div id="메인배열" className="flex ">
-              <ItemList id="왼쪽아이템창">
+              <ItemList id="왼쪽아이템창" className="flex flex-col ">
                 {leftParts.map((name) => {
                   const slot = parts.get(Parts[name]);
                   return (
@@ -292,7 +293,7 @@ export default function Modal({ characterData, closeFunction }: Props) {
                     return (
                       <div key={name}>
                         <Spacing width={3} />
-                        <IconComponent item={slot} dir="left" />
+                        <IconComponent item={slot} dir={Dir.LEFT} />
                         <Spacing width={3} />
                       </div>
                     );
@@ -304,7 +305,7 @@ export default function Modal({ characterData, closeFunction }: Props) {
                   const slot = parts.get(Parts[name]);
                   return (
                     <div key={name}>
-                      <IconComponent item={slot} dir="left" />
+                      <IconComponent item={slot} dir={Dir.LEFT} />
                       <Spacing height={5} />
                     </div>
                   );
